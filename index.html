@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style type="text/css">
+			.submit {
+				margin-left: 20px;
+				cursor: pointer;
+			}
+			.submit:hover {
+				color: red;
+			}
+		</style>
+	</head>
+	<body>
+		<input type="text" id="num">
+		<span class="submit" style="margin-left: 20px;cursor: pointer;">确认</span>
+		<span class="clear" style="margin-left: 20px;cursor: pointer;">清空</span>
+		<p id="text"></p>
+		<script src="js/jq.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var arr = [{
+					key: 500,
+					val: 5,
+				},
+				{
+					key: 1000,
+					val: 4,
+				},
+				{
+					key: 3000,
+					val: 2,
+				},
+				{
+					key: 8000,
+					val: 1.5,
+				},
+				{
+					key: 15000,
+					val: 1.2,
+				},
+				{
+					key: 20000,
+					val: 1,
+				},
+				{
+					key: 50000,
+					val: 0.9,
+				},
+				{
+					key: 100000,
+					val: 0.8,
+				},
+				{
+					key: 150000,
+					val: 0.8,
+				},
+				{
+					key: 200000,
+					val: 0.8,
+				},
+			]
+			function lineInterpolation(num) {
+				var level = 0; // 当前的最大区间
+				var result = 0;
+				if(num <= arr[0].key) {
+					level = 0;
+					return arr[0].val;
+				} else if(num >= arr[arr.length - 1].key) {
+					level = arr.length - 1;
+					result = arr[level].val;
+				} else {
+					for(var i = 0; i < arr.length; i++) {
+						if(arr[i].key > num) {
+							level = i;
+							break;
+						}
+					}
+					result = arr[level - 1].val + (arr[level].val - arr[level - 1].val) / (arr[level].key - arr[level - 1].key) * (num - arr[level - 1].key)
+				}
+				
+				return result
+			}
+			$("#num").keydown(function(e) {
+				if(e.keyCode === 13) {
+					e.preventDefault();
+					var result = lineInterpolation(Number($("#num").val()));
+					$('#text').html(result)
+				}
+			})
+			$('.submit').on('click', function(){
+				var result = lineInterpolation(Number($("#num").val()));
+				$('#text').html(result);
+			})
+			$('.clear').on('click', function(){
+				$("#num").val("")
+			})
+		</script>
+	</body>
+</html>
